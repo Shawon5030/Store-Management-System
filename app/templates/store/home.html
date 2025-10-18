@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Management Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card {
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        .table-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+        .search-box {
+            border-radius: 25px;
+            padding: 10px 20px;
+            border: 1px solid #dee2e6;
+        }
+        .search-box:focus {
+            box-shadow: 0 0 0 0.25rem rgba(102, 16, 242, 0.25);
+            border-color: #6610f2;
+        }
+        .sort-btn {
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 0.85rem;
+        }
+        .table th {
+            background-color: #6610f2;
+            color: black;
+            font-weight: 600;
+            border: none;
+            padding: 12px 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .table th:hover {
+            background-color: #5a0fd8;
+        }
+        .table th i {
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+        .table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(102, 16, 242, 0.05);
+        }
+        .stats-card {
+            border-left: 4px solid #6610f2;
+        }
+        .low-stock {
+            background-color: #fff3cd !important;
+        }
+        .out-of-stock {
+            background-color: #f8d7da !important;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+  <div>
+  {% include "navbar/nav.html" %}
+
+  <!-- Dashboard Stats -->
+  <div class="container mt-4">
+      <div class="row g-4">
+          <div class="col-md-3 col-6">
+              <div class="card dashboard-card stats-card">
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                              <h6 class="card-subtitle mb-2 text-muted">Total Products</h6>
+                              <h3 class="card-title" id="totalProducts">0</h3>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3 col-6">
+              <div class="card dashboard-card stats-card">
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                              <h6 class="card-subtitle mb-2 text-muted">Low Stock Items</h6>
+                              <h3 class="card-title" id="lowStockCount">0</h3>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3 col-6">
+              <div class="card dashboard-card stats-card">
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                              <h6 class="card-subtitle mb-2 text-muted">Total Value</h6>
+                              <h3 class="card-title" id="totalValue">$0</h3>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3 col-6">
+              <div class="card dashboard-card stats-card">
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                              <h6 class="card-subtitle mb-2 text-muted">Out of Stock</h6>
+                              <h3 class="card-title" id="outOfStockCount">0</h3>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+  <!-- Table Container -->
+  <div class="container mt-5">
+      <div class="card dashboard-card">
+          <div class="card-header bg-white py-3">
+              <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="mb-0"><i class="fas fa-boxes me-2"></i>Product Stock List</h4>
+                  <button class="btn btn-primary">
+                      <i class="fas fa-plus me-1"></i> Add Product
+                  </button>
+              </div>
+          </div>
+          <div class="card-body">
+              <!-- Search and Filter Controls -->
+              <div class="row mb-4">
+                  <div class="col-md-6">
+                      <div class="input-group">
+                          <span class="input-group-text bg-light border-end-0">
+                              <i class="fas fa-search text-muted"></i>
+                          </span>
+                          <input type="text" class="form-control search-box border-start-0" placeholder="Search products..." id="searchInput">
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="d-flex gap-2 justify-content-md-end">
+                          <div class="dropdown">
+                              <button class="btn btn-outline-secondary sort-btn dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
+                                  <i class="fas fa-sort me-1"></i> Sort By
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="product_name" data-direction="asc">Product Name A-Z</a></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="product_name" data-direction="desc">Product Name Z-A</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="date" data-direction="desc">Date (Newest)</a></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="date" data-direction="asc">Date (Oldest)</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="total_received" data-direction="desc">Total Received (High to Low)</a></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="total_received" data-direction="asc">Total Received (Low to High)</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="unit_price" data-direction="desc">Unit Price (High to Low)</a></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="unit_price" data-direction="asc">Unit Price (Low to High)</a></li>
+                                  <li><hr class="dropdown-divider"></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="remaining" data-direction="desc">Remaining (High to Low)</a></li>
+                                  <li><a class="dropdown-item sort-option" href="#" data-sort="remaining" data-direction="asc">Remaining (Low to High)</a></li>
+                              </ul>
+                          </div>
+                          <div class="dropdown">
+                              <button class="btn btn-outline-secondary sort-btn dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                                  <i class="fas fa-filter me-1"></i> Filter
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item filter-option active" href="#" data-filter="all">All Products</a></li>
+                                  <li><a class="dropdown-item filter-option" href="#" data-filter="low_stock">Low Stock (≤10)</a></li>
+                                  <li><a class="dropdown-item filter-option" href="#" data-filter="out_of_stock">Out of Stock</a></li>
+                                  <li><a class="dropdown-item filter-option" href="#" data-filter="in_stock">In Stock</a></li>
+                              </ul>
+                          </div>
+                          <button class="btn btn-outline-danger sort-btn" id="resetBtn">
+                              <i class="fas fa-redo me-1"></i> Reset
+                          </button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Results Info -->
+              <div class="alert alert-info d-none" id="resultsInfo">
+                  <i class="fas fa-info-circle me-2"></i>
+                  <span id="resultsText"></span>
+              </div>
+
+              <!-- Product Table -->
+              <div class="table-container">
+                  <div class="table-responsive">
+                      <table class="table table-hover mb-0" id="productTable">
+                          <thead>
+                              <tr>
+                                  <th scope="col" data-sort="serial_number">Serial <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="product_name">Product Name <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="mrr_number">MRR Number <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="date">Date <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="total_received">Total Received <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="distributed">Distributed <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="remaining">Remaining <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="unit_price">Unit Price <i class="fas fa-sort"></i></th>
+                                  <th scope="col" data-sort="total_price">Total Price <i class="fas fa-sort"></i></th>
+                                  <th scope="col">Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody id="tableBody">
+                              {% for product in products %}
+                              <tr class="product-row" 
+                                  data-serial="{{ product.serial_number }}"
+                                  data-name="{{ product.product_name }}"
+                                  data-mrr="{{ product.mrr_number }}"
+                                  data-date="{{ product.date|date:'Y-m-d' }}"
+                                  data-received="{{ product.total_received }}"
+                                  data-distributed="{{ product.distributed }}"
+                                  data-remaining="{{ product.remaining }}"
+                                  data-unit-price="{{ product.unit_price }}"
+                                  data-total-price="{{ product.total_price }}">
+                                  <td>{{ product.serial_number }}</td>
+                                  <td class="fw-medium">{{ product.product_name }}</td>
+                                  <td>{{ product.mrr_number }}</td>
+                                  <td class="text-muted">{{ product.date|date:"M d, Y" }}</td>
+                                  <td><span class="badge bg-primary rounded-pill">{{ product.total_received }}</span></td>
+                                  <td><span class="badge bg-danger rounded-pill">{{ product.distributed }}</span></td>
+                                  <td>
+                                      <span class="badge rounded-pill {% if product.remaining == 0 %}bg-danger{% elif product.remaining <= 10 %}bg-warning{% else %}bg-success{% endif %}">
+                                          {{ product.remaining }}
+                                      </span>
+                                  </td>
+                                  <td>${{ product.unit_price }}</td>
+                                  <td class="fw-bold">${{ product.total_price }}</td>
+                                  <td>
+                                      <div class="btn-group btn-group-sm">
+                                          <button class="btn btn-outline-primary" title="Edit">
+                                              <i class="fas fa-edit"></i>
+                                          </button>
+                                          <button class="btn btn-outline-danger" title="Delete">
+                                              <i class="fas fa-trash"></i>
+                                          </button>
+                                      </div>
+                                  </td>
+                              </tr>
+                              {% empty %}
+                              <tr id="noProductsRow">
+                                  <td colspan="10" class="text-center py-4 text-muted">
+                                      <i class="fas fa-box-open fa-2x mb-3"></i>
+                                      <p>No products available.</p>
+                                  </td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Bootstrap & jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+class ProductManager {
+    constructor() {
+        this.products = [];
+        this.filteredProducts = [];
+        this.currentSort = { field: 'date', direction: 'desc' };
+        this.currentFilter = 'all';
+        this.searchTerm = '';
+        this.init();
+    }
+
+    init() {
+        this.loadProductsFromDOM();
+        this.setupEventListeners();
+        this.updateStats();
+    }
+
+    loadProductsFromDOM() {
+        const rows = document.querySelectorAll('.product-row');
+        this.products = Array.from(rows).map(row => ({
+            element: row,
+            serial_number: row.dataset.serial,
+            product_name: row.dataset.name,
+            mrr_number: row.dataset.mrr,
+            date: row.dataset.date,
+            total_received: parseInt(row.dataset.received),
+            distributed: parseInt(row.dataset.distributed),
+            remaining: parseInt(row.dataset.remaining),
+            unit_price: parseFloat(row.dataset.unitPrice),
+            total_price: parseFloat(row.dataset.totalPrice)
+        }));
+        this.filteredProducts = [...this.products];
+    }
+
+    setupEventListeners() {
+        // Search input
+        $(document).on('input', '#searchInput', (e) => {
+            this.searchTerm = e.target.value.toLowerCase();
+            this.applyFilters();
+        });
+
+        // Sort dropdown items (delegated)
+        $(document).on('click', '.sort-option', (e) => {
+            e.preventDefault();
+            const field = $(e.currentTarget).data('sort');
+            const direction = $(e.currentTarget).data('direction');
+            this.sortProducts(field, direction);
+            this.updateSortDropdownText(field, direction);
+        });
+
+        // Filter dropdown items (delegated)
+        $(document).on('click', '.filter-option', (e) => {
+            e.preventDefault();
+            $('.filter-option').removeClass('active');
+            $(e.currentTarget).addClass('active');
+            this.currentFilter = $(e.currentTarget).data('filter');
+            this.applyFilters();
+            this.updateFilterDropdownText(this.currentFilter);
+        });
+
+        // Reset button
+        $(document).on('click', '#resetBtn', () => this.resetFilters());
+
+        // Table header sort
+        $(document).on('click', 'th[data-sort]', (e) => {
+            const field = e.currentTarget.dataset.sort;
+            const direction = this.currentSort.field === field && this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+            this.sortProducts(field, direction);
+            this.updateHeaderSortIcons(field, direction);
+        });
+    }
+
+    applyFilters() {
+        let filtered = [...this.products];
+
+        if (this.searchTerm) {
+            filtered = filtered.filter(p =>
+                p.product_name.toLowerCase().includes(this.searchTerm) ||
+                p.serial_number.toLowerCase().includes(this.searchTerm) ||
+                p.mrr_number.toLowerCase().includes(this.searchTerm)
+            );
+        }
+
+        switch (this.currentFilter) {
+            case 'low_stock':
+                filtered = filtered.filter(p => p.remaining <= 10 && p.remaining > 0);
+                break;
+            case 'out_of_stock':
+                filtered = filtered.filter(p => p.remaining === 0);
+                break;
+            case 'in_stock':
+                filtered = filtered.filter(p => p.remaining > 10);
+                break;
+        }
+
+        this.filteredProducts = filtered;
+        this.renderProducts();
+        this.updateStats();
+        this.showResultsInfo();
+    }
+
+    sortProducts(field, direction) {
+        this.currentSort = { field, direction };
+        this.filteredProducts.sort((a, b) => {
+            let aValue = a[field];
+            let bValue = b[field];
+            if (field === 'date') {
+                aValue = new Date(aValue);
+                bValue = new Date(bValue);
+            } else if (typeof aValue === 'string') {
+                aValue = aValue.toLowerCase();
+                bValue = bValue.toLowerCase();
+            }
+            if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        this.renderProducts();
+    }
+
+    renderProducts() {
+        const tbody = document.getElementById('tableBody');
+        const noProductsRow = document.getElementById('noProductsRow');
+        this.products.forEach(p => p.element.style.display = 'none');
+        this.filteredProducts.forEach(p => p.element.style.display = '');
+        if (noProductsRow) noProductsRow.style.display = this.filteredProducts.length === 0 ? '' : 'none';
+        this.filteredProducts.forEach(p => tbody.appendChild(p.element));
+    }
+
+    updateStats() {
+        $('#totalProducts').text(this.filteredProducts.length);
+        $('#lowStockCount').text(this.filteredProducts.filter(p => p.remaining <= 10 && p.remaining > 0).length);
+        $('#outOfStockCount').text(this.filteredProducts.filter(p => p.remaining === 0).length);
+        const totalValue = this.filteredProducts.reduce((sum, p) => sum + p.total_price, 0);
+        $('#totalValue').text('$' + totalValue.toFixed(2));
+    }
+
+    updateSortDropdownText(field, direction) {
+        const text = $('a.sort-option').filter(`[data-sort=${field}][data-direction=${direction}]`).text();
+        $('#sortDropdown').html(`<i class="fas fa-sort me-1"></i> ${text}`);
+    }
+
+    updateFilterDropdownText(filter) {
+        const text = $('a.filter-option').filter(`[data-filter=${filter}]`).text();
+        $('#filterDropdown').html(`<i class="fas fa-filter me-1"></i> ${text}`);
+    }
+
+    updateHeaderSortIcons(field, direction) {
+        $('th[data-sort] i').removeClass('fa-sort-up fa-sort-down').addClass('fa-sort');
+        const icon = $(`th[data-sort=${field}] i`);
+        if (direction === 'asc') icon.removeClass('fa-sort').addClass('fa-sort-up');
+        else icon.removeClass('fa-sort').addClass('fa-sort-down');
+    }
+
+    resetFilters() {
+        $('#searchInput').val('');
+        this.searchTerm = '';
+        this.currentFilter = 'all';
+        $('.filter-option').removeClass('active');
+        $('.filter-option[data-filter="all"]').addClass('active');
+        this.filteredProducts = [...this.products];
+        this.renderProducts();
+        this.updateStats();
+        this.updateSortDropdownText('date', 'desc');
+        this.updateFilterDropdownText('all');
+        $('#resultsInfo').addClass('d-none');
+    }
+
+    showResultsInfo() {
+        if (this.filteredProducts.length !== this.products.length || this.searchTerm) {
+            $('#resultsText').text(`${this.filteredProducts.length} products found`);
+            $('#resultsInfo').removeClass('d-none');
+        } else {
+            $('#resultsInfo').addClass('d-none');
+        }
+    }
+}
+
+// Initialize after DOM is fully loaded
+$(document).ready(() => {
+    new ProductManager();
+});
+</script>
+
+</body>
+</html>

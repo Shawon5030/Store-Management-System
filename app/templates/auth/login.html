@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Management System - Login</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .btn-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .message-slide {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .logo-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 to-cyan-400 min-h-screen flex items-center justify-center p-4 transition-colors duration-300 dark:from-indigo-900 dark:to-cyan-800">
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="absolute top-4 right-4 text-white bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors z-10" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+
+    <main class="w-full max-w-md">
+        <div class="glass-card rounded-2xl p-8 shadow-xl fade-in">
+            <!-- Django Messages -->
+            {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                <div class="p-3 rounded-lg text-white text-sm font-medium message-slide
+                    {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-[#6366F1]{% endif %}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            {% elif message.tags == 'success' %}
+                            <i class="fas fa-check-circle mr-2"></i>
+                            {% else %}
+                            <i class="fas fa-info-circle mr-2"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                        <button type="button" class="text-white hover:text-gray-200 transition-colors" onclick="this.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Logo and Title -->
+            <div class="text-center mb-8">
+                <div class="bg-white/20 p-4 rounded-full inline-flex items-center justify-center mb-4 logo-glow">
+                    <i class="fas fa-store text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-semibold text-white mb-2">Store Management System</h1>
+                <p class="text-sm text-gray-200">Sign in to access your dashboard</p>
+            </div>
+
+            <!-- Login Form -->
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Username/Email Field -->
+                <div class="mb-4">
+                    <label for="username_or_email" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-user mr-2"></i>Email Address
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username_or_email" 
+                        name="username_or_email" 
+                        class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-6">
+                    <label for="password" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <button type="button" class="absolute right-3 top-3 text-gray-300 hover:text-white transition-colors" id="togglePassword" aria-label="Show password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex justify-between items-center mb-6">
+                    <label class="flex items-center text-white text-sm">
+                        <input type="checkbox" name="remember_me" class="rounded bg-white/10 border-white/20 text-[#6366F1] focus:ring-[#6366F1] mr-2">
+                        Remember me
+                    </label>
+                    <a href="{% url 'password_reset' %}" class="text-white hover:text-gray-200 text-sm transition-colors">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <!-- Login Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-[#6366F1] text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 btn-lift hover:bg-transparent hover:border hover:border-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-opacity-50 mb-4"
+                >
+                    Login
+                </button>
+
+                <!-- Registration Link -->
+                <div class="text-center">
+                    <p class="text-white text-sm">
+                        Open a new account? 
+                        <a href="{% url 'register' %}" class="text-white hover:text-gray-200 font-medium transition-colors">
+                            Registration
+                        </a>
+                    </p>
+                </div>
+            </form>
+
+            <!-- Footer -->
+            <div class="text-center mt-6 pt-4 border-t border-white/20">
+                <p class="text-gray-200 text-xs">© 2023 Store Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                darkModeIcon.classList.remove('fa-moon');
+                darkModeIcon.classList.add('fa-sun');
+            } else {
+                darkModeIcon.classList.remove('fa-sun');
+                darkModeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        
+        togglePassword.addEventListener('click', () => {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            togglePassword.querySelector('i').classList.toggle('fa-eye');
+            togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Auto-dismiss messages after 5 seconds
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message-slide');
+            messages.forEach(message => {
+                message.style.transition = 'all 0.5s ease-out';
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                setTimeout(() => message.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

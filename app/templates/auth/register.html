@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Management System - Register</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .btn-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .message-slide {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .logo-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+        .password-strength-meter {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .password-weak {
+            background-color: #ef4444;
+            width: 25%;
+        }
+        .password-medium {
+            background-color: #f59e0b;
+            width: 50%;
+        }
+        .password-strong {
+            background-color: #10b981;
+            width: 75%;
+        }
+        .password-very-strong {
+            background-color: #22c55e;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 to-cyan-400 min-h-screen flex items-center justify-center p-4 transition-colors duration-300 dark:from-indigo-900 dark:to-cyan-800">
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="absolute top-4 right-4 text-white bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors z-10" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+
+    <main class="w-full max-w-md">
+        <div class="glass-card rounded-2xl p-8 shadow-xl fade-in">
+            <!-- Django Messages -->
+            {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                <div class="p-3 rounded-lg text-white text-sm font-medium message-slide
+                    {% if message.tags == 'error' %}bg-red-500{% elif message.tags == 'success' %}bg-green-500{% else %}bg-[#6366F1]{% endif %}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            {% if message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            {% elif message.tags == 'success' %}
+                            <i class="fas fa-check-circle mr-2"></i>
+                            {% else %}
+                            <i class="fas fa-info-circle mr-2"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                        <button type="button" class="text-white hover:text-gray-200 transition-colors" onclick="this.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Logo and Title -->
+            <div class="text-center mb-8">
+                <div class="bg-white/20 p-4 rounded-full inline-flex items-center justify-center mb-4 logo-glow">
+                    <i class="fas fa-store text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-semibold text-white mb-2">Store Management System</h1>
+                <p class="text-sm text-gray-200">Create your account</p>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registrationForm" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                
+                <!-- Username Field -->
+                <div class="mb-4">
+                    <label for="username" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-user mr-2"></i>Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                        placeholder="Enter your username"
+                        required
+                    >
+                </div>
+
+                <!-- Full Name Field -->
+                <div class="mb-4">
+                    <label for="fullName" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-id-card mr-2"></i>Full Name
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="full_name" 
+                        class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-4">
+                    <label for="email" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-envelope mr-2"></i>Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-4">
+                    <label for="password" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                            placeholder="Create a password"
+                            required
+                        >
+                        <button type="button" class="absolute right-3 top-3 text-gray-300 hover:text-white transition-colors" id="togglePassword" aria-label="Show password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <!-- Password Strength Meter -->
+                    <div class="mt-2">
+                        <div class="password-strength-meter" id="passwordStrengthMeter"></div>
+                        <p class="text-xs text-gray-200 mt-1" id="passwordStrengthText">Use 8+ characters with a mix of letters, numbers & symbols</p>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="mb-6">
+                    <label for="confirmPassword" class="block text-white text-sm font-medium mb-2">
+                        <i class="fas fa-lock mr-2"></i>Confirm Password
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirm_password" 
+                            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all"
+                            placeholder="Confirm your password"
+                            required
+                        >
+                        <button type="button" class="absolute right-3 top-3 text-gray-300 hover:text-white transition-colors" id="toggleConfirmPassword" aria-label="Show password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-red-300 mt-1 hidden" id="passwordMatchError">Passwords do not match</p>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="mb-6">
+                    <label class="flex items-start text-white text-sm">
+                        <input type="checkbox" name="terms" id="terms" class="rounded bg-white/10 border-white/20 text-[#6366F1] focus:ring-[#6366F1] mr-3 mt-1" required>
+                        <span>I agree to the <a href="#" class="text-white hover:text-gray-200 underline transition-colors">Terms of Service</a> and <a href="#" class="text-white hover:text-gray-200 underline transition-colors">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <!-- Register Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-[#6366F1] text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 btn-lift hover:bg-transparent hover:border hover:border-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:ring-opacity-50 mb-4"
+                >
+                    Create Account
+                </button>
+
+                <!-- Login Link -->
+                <div class="text-center">
+                    <p class="text-white text-sm">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" class="text-white hover:text-gray-200 font-medium transition-colors">
+                            Sign In
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                darkModeIcon.classList.remove('fa-moon');
+                darkModeIcon.classList.add('fa-sun');
+            } else {
+                darkModeIcon.classList.remove('fa-sun');
+                darkModeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        
+        togglePassword.addEventListener('click', () => {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            togglePassword.querySelector('i').classList.toggle('fa-eye');
+            togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+        
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPassword.setAttribute('type', type);
+            toggleConfirmPassword.querySelector('i').classList.toggle('fa-eye');
+            toggleConfirmPassword.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Password Strength Meter
+        const passwordStrengthMeter = document.getElementById('passwordStrengthMeter');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+        const passwordMatchError = document.getElementById('passwordMatchError');
+        
+        password.addEventListener('input', () => {
+            const passwordValue = password.value;
+            let strength = 0;
+            let text = 'Use 8+ characters with a mix of letters, numbers & symbols';
+            let className = 'password-strength-meter';
+            
+            if (passwordValue.length >= 8) strength++;
+            if (passwordValue.match(/[a-z]/) && passwordValue.match(/[A-Z]/)) strength++;
+            if (passwordValue.match(/\d/)) strength++;
+            if (passwordValue.match(/[^a-zA-Z\d]/)) strength++;
+            
+            switch(strength) {
+                case 0:
+                    text = 'Very weak';
+                    className = 'password-weak';
+                    break;
+                case 1:
+                    text = 'Weak';
+                    className = 'password-weak';
+                    break;
+                case 2:
+                    text = 'Fair';
+                    className = 'password-medium';
+                    break;
+                case 3:
+                    text = 'Good';
+                    className = 'password-strong';
+                    break;
+                case 4:
+                    text = 'Strong';
+                    className = 'password-very-strong';
+                    break;
+            }
+            
+            passwordStrengthMeter.className = className;
+            passwordStrengthText.textContent = text;
+            
+            // Validate password match
+            validatePasswordMatch();
+        });
+        
+        // Password Match Validation
+        confirmPassword.addEventListener('input', validatePasswordMatch);
+        
+        function validatePasswordMatch() {
+            const passwordValue = password.value;
+            const confirmPasswordValue = confirmPassword.value;
+            
+            if (confirmPasswordValue === '') {
+                passwordMatchError.classList.add('hidden');
+                confirmPassword.classList.remove('border-red-300');
+                confirmPassword.classList.add('border-white/20');
+            } else if (passwordValue === confirmPasswordValue) {
+                passwordMatchError.classList.add('hidden');
+                confirmPassword.classList.remove('border-red-300');
+                confirmPassword.classList.add('border-green-300');
+            } else {
+                passwordMatchError.classList.remove('hidden');
+                confirmPassword.classList.remove('border-white/20', 'border-green-300');
+                confirmPassword.classList.add('border-red-300');
+            }
+        }
+
+        // Form submission validation
+        const form = document.getElementById('registrationForm');
+        form.addEventListener('submit', (e) => {
+            const passwordValue = password.value;
+            const confirmPasswordValue = confirmPassword.value;
+            const termsChecked = document.getElementById('terms').checked;
+            
+            if (passwordValue !== confirmPasswordValue) {
+                e.preventDefault();
+                validatePasswordMatch();
+                passwordMatchError.classList.remove('hidden');
+            }
+            
+            if (!termsChecked) {
+                e.preventDefault();
+                document.getElementById('terms').focus();
+            }
+        });
+
+        // Auto-dismiss messages after 5 seconds
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message-slide');
+            messages.forEach(message => {
+                message.style.transition = 'all 0.5s ease-out';
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                setTimeout(() => message.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

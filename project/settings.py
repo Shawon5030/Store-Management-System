@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--&$vlp-xu1y^$=pdz%jr$#yi%p*m#=jh9o=#+%ff=w&)$v$b#+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 import os
 
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['web-production-b382d.up.railway.app']
 
 
 # Application definition
@@ -107,6 +107,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-b382d.up.railway.app',
+]
 
 
 # Static files (CSS, JavaScript, Images)

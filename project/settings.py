@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--&$vlp-xu1y^$=pdz%jr$#yi%p*m#=jh9o=#+%ff=w&)$v$b#+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 import os
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -112,6 +113,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

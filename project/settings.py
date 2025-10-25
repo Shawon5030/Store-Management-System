@@ -24,8 +24,10 @@ SECRET_KEY = 'django-insecure--&$vlp-xu1y^$=pdz%jr$#yi%p*m#=jh9o=#+%ff=w&)$v$b#+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-ALLOWED_HOSTS = ["*","192.168.1.104"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

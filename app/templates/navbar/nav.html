@@ -4,258 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern ProductManager Navbar</title>
-    <!-- Bootstrap 5 CSS -->
-    
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a56d4;
-            --primary-light: #5a75f5;
-            --accent-color: #4cc9f0;
-            --text-light: #f8f9fa;
-            --text-dark: #212529;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
-            box-shadow: var(--shadow);
-            padding: 0.75rem 0;
-            transition: var(--transition);
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: var(--transition);
-        }
-
-        .navbar-brand::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.7s;
-        }
-
-        .navbar-brand:hover::before {
-            left: 100%;
-        }
-
-        .navbar-brand:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .navbar-nav .nav-link {
-            position: relative;
-            padding: 0.5rem 1rem;
-            margin: 0 0.25rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: var(--transition);
-            overflow: hidden;
-        }
-
-        .navbar-nav .nav-link::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background-color: var(--accent-color);
-            transition: width 0.3s ease;
-            border-radius: 3px 3px 0 0;
-        }
-
-        .navbar-nav .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .navbar-nav .nav-link:hover::before {
-            width: 100%;
-        }
-
-        .navbar-nav .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .navbar-nav .nav-link.active::before {
-            width: 100%;
-        }
-
-        .dropdown-menu {
-            border: none;
-            box-shadow: var(--shadow);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-            animation: dropdownFade 0.3s ease;
-        }
-
-        @keyframes dropdownFade {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .dropdown-item {
-            padding: 0.75rem 1.25rem;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dropdown-item::before {
-            content: '';
-            position: absolute;
-            left: -100%;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(67, 97, 238, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .dropdown-item:hover::before {
-            left: 100%;
-        }
-
-        .dropdown-item:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-            padding-left: 1.5rem;
-        }
-
-        .notification-badge {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 7px rgba(220, 53, 69, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-            }
-        }
-
-        .user-avatar {
-            background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-light) 100%);
-            transition: var(--transition);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-        }
-
-        .user-dropdown:hover .user-avatar {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
-        }
-
-        .notification-item {
-            transition: var(--transition);
-        }
-
-        .notification-item:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-            transform: translateX(5px);
-        }
-
-        .navbar-toggler {
-            border: none;
-            padding: 0.5rem;
-            transition: var(--transition);
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
-        }
-
-        .navbar-toggler:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 991.98px) {
-            .navbar-collapse {
-                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-                padding: 1rem;
-                border-radius: 10px;
-                margin-top: 10px;
-                box-shadow: var(--shadow);
-            }
-            
-            .navbar-nav .nav-link {
-                margin: 0.25rem 0;
-            }
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-                <i class="fas fa-cube me-2"></i>
-                ProductManager
-            </a>
+    <nav class="bg-gradient-to-r from-blue-600 to-purple-700 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <a href="{% url 'home' %}" class="flex items-center space-x-2 text-white font-bold text-xl bg-white/10 hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-300 hover:shadow-lg relative overflow-hidden group">
+                    <i class="fas fa-cube"></i>
+                    <span>ProductManager</span>
+                    <div class="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:left-full transition-all duration-700"></div>
+                </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <!-- Mobile Menu Button -->
+                <button class="lg:hidden text-white p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
-                            <i class="fas fa-home me-1"></i> Home
+                <!-- Navigation Links -->
+                <div class="hidden lg:flex items-center space-x-1">
+                    <div class="flex items-center space-x-1">
+                        <a href="{% url 'home' %}" class="flex items-center space-x-1 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:bg-white/10 relative group">
+                            <i class="fas fa-home text-sm"></i>
+                            <span>Home</span>
+                            <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                            {% if request.resolver_match.url_name == 'home' %}
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 rounded-full"></div>
+                            {% endif %}
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
-                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+
+                        <a href="{% url 'dashboard' %}" class="flex items-center space-x-1 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:bg-white/10 relative group">
+                            <i class="fas fa-tachometer-alt text-sm"></i>
+                            <span>Dashboard</span>
+                            <div class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300 rounded-full"></div>
+                            {% if request.resolver_match.url_name == 'dashboard' %}
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400 rounded-full"></div>
+                            {% endif %}
                         </a>
-                    </li>
-                </ul>
+                    </div>
+                </div>
 
-
-                <ul class="navbar-nav ms-auto">
-                    
-
-                    <li class="nav-item dropdown user-dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="rounded-circle user-avatar d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
-                                <i class="fas fa-user text-white"></i>
+                <!-- User Dropdown -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-white px-3 py-2 rounded-lg transition-all duration-300 hover:bg-white/10">
+                            <div class="w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/30">
+                                <i class="fas fa-user text-white text-sm"></i>
                             </div>
                             <span>{{request.user.first_name}}</span>
+                            <i class="fas fa-chevron-down text-sm transition-transform duration-300 group-hover:rotate-180"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                            <div class="py-2">
+                                <a href="{% url 'password_change' %}" class="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-blue-50 transition-all duration-300 hover:pl-6 relative overflow-hidden group">
+                                    <i class="fas fa-key text-blue-500 text-sm"></i>
+                                    <span>Change Password</span>
+                                    <div class="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-blue-50 to-transparent group-hover:left-full transition-all duration-500"></div>
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <a href="{% url 'logout' %}" class="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-red-50 transition-all duration-300 hover:pl-6 relative overflow-hidden group">
+                                    <i class="fas fa-sign-out-alt text-red-500 text-sm"></i>
+                                    <span>Logout</span>
+                                    <div class="absolute inset-0 -left-full bg-gradient-to-r from-transparent via-red-50 to-transparent group-hover:left-full transition-all duration-500"></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="lg:hidden bg-gradient-to-br from-blue-600 to-purple-700 rounded-lg shadow-lg mt-2 p-4 hidden">
+                <div class="space-y-2">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-3 text-white px-4 py-3 rounded-lg transition-all duration-300 hover:bg-white/10">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                        {% if request.resolver_match.url_name == 'home' %}
+                        <div class="ml-auto w-2 h-2 bg-cyan-400 rounded-full"></div>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'dashboard' %}" class="flex items-center space-x-3 text-white px-4 py-3 rounded-lg transition-all duration-300 hover:bg-white/10">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        {% if request.resolver_match.url_name == 'dashboard' %}
+                        <div class="ml-auto w-2 h-2 bg-cyan-400 rounded-full"></div>
+                        {% endif %}
+                    </a>
+                    <div class="border-t border-white/20 pt-2 mt-2">
+                        <a href="{% url 'password_change' %}" class="flex items-center space-x-3 text-white px-4 py-3 rounded-lg transition-all duration-300 hover:bg-white/10">
+                            <i class="fas fa-key"></i>
+                            <span>Change Password</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            
-                            <li><a class="dropdown-item" href="{% url 'password_change' %}"><i class="fas fa-key me-2"></i> Change Password</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                        <a href="{% url 'logout' %}" class="flex items-center space-x-3 text-white px-4 py-3 rounded-lg transition-all duration-300 hover:bg-white/10">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('button[class*="lg:hidden"]');
+            const mobileMenu = document.querySelector('div[class*="lg:hidden"].hidden');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('nav')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
